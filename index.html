@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portfolio — ビデオサンプル</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1 class="title">ポートフォリオ</h1>
+      <p class="subtitle">サムネイルをクリックして動画を再生します（YouTube埋め込み）</p>
+    </div>
+  </header>
+
+  <main class="container main">
+    <section class="card">
+      <h2 class="card-title">プロジェクト名</h2>
+
+      <!-- サムネイル: プロジェクト内に assets/thumbnail.jpg を置いてください -->
+      <button class="thumb" id="open-video" aria-haspopup="dialog" aria-controls="video-modal">
+        <img src="assets/thumbnail.jpg" alt="動画のサムネイル（置き換えてください）" onerror="this.onerror=null;this.src='https://via.placeholder.com/1280x720?text=Thumbnail'">
+        <div class="play">▶</div>
+      </button>
+
+      <p class="description">短い説明文をここに記載します。動画の概要や使用した技術など。</p>
+    </section>
+  </main>
+
+  <!-- モーダル（YouTube埋め込み） -->
+  <div id="video-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" id="backdrop"></div>
+    <div class="modal-panel" role="document">
+      <button class="modal-close" id="close-video" aria-label="動画を閉じる">✕</button>
+      <div class="video-wrap" id="video-wrap">
+        <!-- 下の data-video-id を YouTube の動画IDに置き換えてください -->
+        <iframe id="video-iframe" width="1280" height="720" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">© <span id="year"></span> あなたの名前</div>
+  </footer>
+
+  <script>
+    // 初期設定: 動画IDをここに入れてください
+    const YOUTUBE_ID = 'YOUTUBE_VIDEO_ID'; // 例: 'dQw4w9WgXcQ'
+
+    const openBtn = document.getElementById('open-video');
+    const modal = document.getElementById('video-modal');
+    const closeBtn = document.getElementById('close-video');
+    const backdrop = document.getElementById('backdrop');
+    const iframe = document.getElementById('video-iframe');
+
+    function openModal() {
+      iframe.src = `https://www.youtube.com/embed/${YOUTUBE_ID}?autoplay=1&rel=0`;
+      modal.setAttribute('aria-hidden', 'false');
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      iframe.src = '';
+      modal.setAttribute('aria-hidden', 'true');
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      openBtn.focus();
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+
+    // Escape キーで閉じる
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+
+    // 年の表示
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
